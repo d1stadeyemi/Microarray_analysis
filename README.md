@@ -1,0 +1,2 @@
+## DEG Analysis
+In this analysis we identifed genes that are differentially expressed based on the microarray results of there expressions. These genes are expressed by cells that infected by 1) a wiild type sars-cov virus, icSARs, 2) dORF-6 mutant sars-cov, 3) BAT mutant virus and 4) H1N1, influenza virus.
