@@ -11,6 +11,7 @@ The data used for this study were extracted from the work of Mitchell et al (201
 Data access on this [Link](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE47960)
 
 ## Methods
+The defferential gene expression (DEG) analysis can be found [here](https://github.com/d1stadeyemi/RNA_seq/blob/master/gene_exp.ipynb)
 ![Methodology](https://github.com/d1stadeyemi/RNA_seq/blob/master/images/methodology.png)
 
 ## Results
