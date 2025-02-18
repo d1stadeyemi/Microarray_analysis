@@ -6,7 +6,7 @@ In this analysis we identifed genes that are differentially expressed based on t
 3. BAT mutant virus and 
 4. H1N1, influenza virus.
 
-The data used for this study were extracted from the work of Mitchell et al (2013).
+The data used for this study were extracted from the work of [Mitchell et al (2013)](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0069374)
 
 Data access on this [Link](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE47960)
 
