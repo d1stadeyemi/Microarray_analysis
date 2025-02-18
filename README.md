@@ -10,7 +10,7 @@ The data used for this study were extracted from the work of Mitchell et al (201
 Data access on this [Link](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE47960)
 
 ## Methods
-![Methodology](images\methodology.png)
+![Methodology](C:\Users\AUC\Documents\GitHub\RNA_seq\images\methodology.png)
 
 ## Results
 1. We identified 25 common DEGs across influenza and SARS-CoV infections, highlighting shared host responses.
