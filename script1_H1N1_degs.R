@@ -1,0 +1,136 @@
+# If required install BiocManager
+if (!require("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+# Install the required packages
+BiocManager::install("GEOquery")
+BiocManager::install("limma")
+BiocManager::install("umap")
+install.packages("ggplot2")
+install.packages("ggrepel")
+
+# Load required packages for Differential Gene Expression Analysis
+library(GEOquery)
+library(limma)
+library(umap)
+library(ggplot2)
+library(ggrepel)
+
+# Download expression dataset (in matrix format), metadata and the annotation if available
+gset <- getGEO("GSE47960", GSEMatrix =TRUE, AnnotGPL=TRUE)
+
+# Since there are only 1 platform in the GEO Dataset,
+# then the code below is not needed
+# As it selects, if there are more than 1 platform, the dataset of the first platform
+# if (length(gset) > 1) idx <- grep("GPL6480", attr(gset, "names")) else idx <- 1
+
+# Extract the ExpressionSet of the only available platform in the GEO dataset
+gset <- gset[[1]]
+
+# Convert the feature variable labels (column names) into a standard R compatible variable names
+fvarLabels(gset) <- make.names(fvarLabels(gset))
+
+# split samples into groups
+# Control samples ("mock") are assigned to group 0
+# while H1N1 treatment samples are assigned to group 1
+# and others are assigned to group X
+gsms <- paste0("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX11111111111111111",
+        "111000000000000000000000000000000000000XXXXXXXXXXX",
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+        "XXXXXXXXXXXXX") # NB: paste0 combines several long stings into a single long string
+
+# Slipt the string "gsms" into individual character and extract them from the list
+sml <- strsplit(gsms, split = "")[[1]]
+
+# Find the indices of non-X samples
+sel <- which(sml != "X")
+
+# Filter group labels
+sml <- sml[sel]
+
+# Filter columns in the expression dataset
+gset <- gset[ ,sel]
+
+# Prepare expression dataset for log2 transformation if needed
+# by checking if the expression data looks like raw data or not
+# If yes, then conduct a log2 transformation
+# Extract the expression matrix from the gset object
+ex <- exprs(gset)
+
+# Calculate different percentiles of the expression values and omit NA
+# Then convert the result into numeric values
+qx <- as.numeric(quantile(ex, c(0., 0.25, 0.5, 0.75, 0.99, 1.0), na.rm=T))
+
+# Check the percentiles of the expression data to determine if raw or not
+LogC <- (qx[5] > 100) || # Check if the 99th percentile is very high
+          (qx[6]-qx[1] > 50 && qx[2] > 0) # Check if the range is very high and most values are positive
+
+# Applied log2 transformation if the above conditions are true
+if (LogC) { ex[which(ex <= 0)] <- NaN
+  exprs(gset) <- log2(ex) }
+
+# Prepare to assign samples to groups
+# Convert vector (suppose group labels) to factor which is used for categorical variables
+gs <- factor(sml)
+
+# Create an R friendly variable names to facilitate downstream usage
+groups <- make.names(c("0","1"))
+
+# Convert the group labels to R valid variable names
+levels(gs) <- groups
+
+# Add a new "group" column to define sample groups
+gset$group <- gs
+
+# Create a no-intercept design matrix with one column per group
+design <- model.matrix(~group + 0, gset)
+
+# Rename design matrix columns for consistency
+colnames(design) <- levels(gs)
+
+# Data Cleaning: Keep only rows (probes/genes) without missing (NA) values in all samples
+gset <- gset[complete.cases(exprs(gset)), ]
+
+# Fit a linear model
+fit <- lmFit(gset, design)
+
+# Compare group X0 and group X1
+cts <- paste(groups[1], groups[2], sep = "-")
+
+# Find the difference in expression between the two groups
+cont.matrix <- makeContrasts(contrasts=cts, levels=design)
+
+# Apply the difference (contrast) to the fitted model
+# to isolate only the difference between the two groups (control and treatment) for each gene
+fit2 <- contrasts.fit(fit, cont.matrix)
+
+# Apply empirical bayes moderation to the linear model results in fit2
+# To reduce linear model estimation noise
+fit2 <- eBayes(fit2, 0.01)
+
+# Compute the main output table
+tT <- topTable(
+          fit2,               # The moderated model
+          adjust = "fdr",     # Adjust p-values for multiple testing using False Discovery Rate
+          sort.by = "B",      # Sort genes by B-statistic (probability of being Differentially Expressed)
+          number = Inf        # Get all genes
+          )
+
+# Extract only the important columns from the main output (final result; tT)
+tT <- subset(tT, select = c("ID","adj.P.Val","P.Value","t","B","logFC","GenBank.Accession","Gene.symbol","Gene.title"))
+
+# Extract the DEGs (adjusted p-value <0.05 and absolute value of logFC > 1)
+degs <- subset(tT, adj.P.Val < 0.05 & abs(logFC) > 1)
+
+# Extract genes that are upregulated and downregulated
+upregulated_genes <- subset(degs, logFC > 1)
+downregulated_genes <- subset(degs, logFC < -1)
+
+nrow(upregulated_genes)
+nrow(downregulated_genes)
+
+# Another way of extracting upregulated and downregulated genes using limma
+# summarize test results as "up", "down" or "not expressed"
+# dT <- decideTests(fit2, adjust.method = "fdr", p.value = 0.01, lfc = 0)
+
+write.table(degs, file = "DEGs.tsv", sep = "\t", quote = FALSE, row.names = FALSE)
