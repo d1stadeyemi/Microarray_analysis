@@ -126,9 +126,6 @@ degs <- subset(tT, adj.P.Val < 0.05 & abs(logFC) > 1)
 upregulated_genes <- subset(degs, logFC > 1)
 downregulated_genes <- subset(degs, logFC < -1)
 
-nrow(upregulated_genes)
-nrow(downregulated_genes)
-
 # Another way of extracting upregulated and downregulated genes using limma
 # summarize test results as "up", "down" or "not expressed"
 # dT <- decideTests(fit2, adjust.method = "fdr", p.value = 0.01, lfc = 0)
