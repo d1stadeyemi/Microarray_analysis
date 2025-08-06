@@ -130,4 +130,4 @@ downregulated_genes <- subset(degs, logFC < -1)
 # summarize test results as "up", "down" or "not expressed"
 # dT <- decideTests(fit2, adjust.method = "fdr", p.value = 0.01, lfc = 0)
 
-write.table(degs, file = "DEGs.tsv", sep = "\t", quote = FALSE, row.names = FALSE)
+write.table(degs, file = "DEGs_H1N1.tsv", sep = "\t", quote = FALSE, row.names = FALSE)
