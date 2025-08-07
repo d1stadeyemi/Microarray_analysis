@@ -1,6 +1,6 @@
 # DEG Analysis
 ## Introduction
-In this analysis we identifed genes that are differentially expressed based on the microarray results of there expressions. These genes are expressed by cells that infected by 
+In this analysis we identifed genes that are differentially expressed based on the microarray results of there expressions. These genes were expressed by cells infected with 
 1. a wild type sars-cov virus, icSARs, 
 2. dORF-6 mutant sars-cov, 
 3. BAT mutant virus and 
