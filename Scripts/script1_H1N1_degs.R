@@ -187,6 +187,7 @@ df <- data.frame(UMAP1 = ump$layout[,1],
                  Sample = rownames(ump$layout),
                  Group = gs)
 
+# Customize UMAP with ggplot2
 ggplot(df, aes(x = UMAP1, y = UMAP2, color = Group)) +
   geom_point(size = 3, alpha = 0.8) +
   geom_text_repel(aes(label = Sample), size = 3, max.overlaps = 100) +
