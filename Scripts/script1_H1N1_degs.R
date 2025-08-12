@@ -7,6 +7,7 @@ BiocManager::install("umap")
 install.packages("ggplot2")
 install.packages("ggrepel")
 install.packages("VennDiagram")
+install.packages("patchwork")
 
 # Load required packages for Differential Gene Expression Analysis
 library(GEOquery)
@@ -15,6 +16,7 @@ library(umap)
 library(ggplot2)
 library(ggrepel)
 library(VennDiagram)
+library(patchwork)
 
 # Download expression dataset (in matrix format), metadata and the annotation if available
 gset <- getGEO("GSE47960", GSEMatrix =TRUE, AnnotGPL=TRUE)
