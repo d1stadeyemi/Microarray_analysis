@@ -1,13 +1,12 @@
-# If required install BiocManager
 if (!require("BiocManager", quietly = TRUE))
   install.packages("BiocManager")
 
-# Install the required packages
 BiocManager::install("GEOquery")
 BiocManager::install("limma")
 BiocManager::install("umap")
 install.packages("ggplot2")
 install.packages("ggrepel")
+install.packages("VennDiagram")
 
 # Load required packages for Differential Gene Expression Analysis
 library(GEOquery)
@@ -15,6 +14,7 @@ library(limma)
 library(umap)
 library(ggplot2)
 library(ggrepel)
+library(VennDiagram)
 
 # Download expression dataset (in matrix format), metadata and the annotation if available
 gset <- getGEO("GSE47960", GSEMatrix =TRUE, AnnotGPL=TRUE)
@@ -30,26 +30,38 @@ gset <- gset[[1]]
 # Convert the feature variable labels (column names) into a standard R compatible variable names
 fvarLabels(gset) <- make.names(fvarLabels(gset))
 
-# split samples into groups
-# Control samples ("mock") are assigned to group 0
-# while H1N1 treatment samples are assigned to group 1
-# and others are assigned to group X
-gsms <- paste0("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX11111111111111111",
-        "111000000000000000000000000000000000000XXXXXXXXXXX",
-        "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-        "XXXXXXXXXXXXX") # NB: paste0 combines several long stings into a single long string
+# Create groups for samples
+# Group 0 is for the control (mock)
+# while group 1 to 4 for treatment samples
 
-# Slipt the string "gsms" into individual character and extract them from the list
-sml <- strsplit(gsms, split = "")[[1]]
+# Define a function that uses number patterns to classify the samples into groups
+classify_samples <- function(sample_names, pattern_map) {
 
-# Find the indices of non-X samples
-sel <- which(sml != "X")
+  # Start with the default group for samples
+  sml <- rep("X", length(sample_names))
 
-# Filter group labels
-sml <- sml[sel]
+  # Create groups based on the pattern map
+  for (pat in names(pattern_map)) {
+    sml[grepl(pat, sample_names, ignore.case=TRUE)] <- pattern_map[[pat]]
+  }
 
-# Filter columns in the expression dataset
-gset <- gset[ ,sel]
+  return(sml)
+}
+
+# Assign the samples' column to a variable
+sample_names <- gset$`infection code:ch1`
+
+# Define patterns and group label
+pattern_map <- list(
+  "mock" = "0",
+  "H1N1" = "1",
+  "dORF6" = "2",
+  "BatSRBD" = "3",
+  "icSARS" = "4"
+)
+
+# Apply function to classify samples into groups
+sml <- classify_samples(sample_names, pattern_map)
 
 # Prepare expression dataset for log2 transformation if needed
 # by checking if the expression data looks like raw data or not
@@ -74,7 +86,7 @@ if (LogC) { ex[which(ex <= 0)] <- NaN
 gs <- factor(sml)
 
 # Create an R friendly variable names to facilitate downstream usage
-groups <- make.names(c("0","1"))
+groups <- make.names(c('mock', 'H1N1', 'dORF6', 'BatSRBD', 'icSARS'))
 
 # Convert the group labels to R valid variable names
 levels(gs) <- groups
@@ -83,7 +95,7 @@ levels(gs) <- groups
 gset$group <- gs
 
 # Create a no-intercept design matrix with one column per group
-design <- model.matrix(~group + 0, gset)
+design <- model.matrix(~ group + 0, gset)
 
 # Rename design matrix columns for consistency
 colnames(design) <- levels(gs)
@@ -94,11 +106,14 @@ gset <- gset[complete.cases(exprs(gset)), ]
 # Fit a linear model
 fit <- lmFit(gset, design)
 
-# Compare group X0 and group X1
-cts <- paste(groups[1], groups[2], sep = "-")
-
-# Find the difference in expression between the two groups
-cont.matrix <- makeContrasts(contrasts=cts, levels=design)
+# Create contrast: Find the difference in expression between mock and treatment groups
+cont.matrix <- makeContrasts(
+  H1N1_vs_mock = H1N1 - mock,
+  dORF6_vs_mock = dORF6 - mock,
+  BatSRBD_vs_mock = BatSRBD - mock,
+  icSARS_vs_mock = icSARS - mock,
+  levels = design
+)
 
 # Apply the difference (contrast) to the fitted model
 # to isolate only the difference between the two groups (control and treatment) for each gene
@@ -106,99 +121,62 @@ fit2 <- contrasts.fit(fit, cont.matrix)
 
 # Apply empirical bayes moderation to the linear model results in fit2
 # To reduce linear model estimation noise
-fit2 <- eBayes(fit2, 0.01)
+fit2 <- eBayes(fit2)
 
-# Compute the main output table
-tT <- topTable(
-          fit2,               # The moderated model
-          adjust = "fdr",     # Adjust p-values for multiple testing using False Discovery Rate
-          sort.by = "B",      # Sort genes by B-statistic (probability of being Differentially Expressed)
-          number = Inf        # Get all genes
+# Compute the main output table for each sample
+tT_H1N1 <- topTable(
+          fit2,                   # The moderated model
+          coef = "H1N1_vs_mock",  # define which sample to select from
+          adjust = "fdr",         # Adjust p-values for multiple testing using False Discovery Rate
+          sort.by = "B",          # Sort genes by B-statistic (probability of being Differentially Expressed)
+          number = Inf            # Get all genes
           )
 
+tT_dORF6 <- topTable(fit2, coef="dORF6_vs_mock" ,adjust="fdr", sort.by="B", number=Inf)
+tT_BatSRBD <- topTable(fit2, coef="BatSRBD_vs_mock", adjust="fdr", sort.by="B", number=Inf)
+tT_icSARS <- topTable(fit2, coef="icSARS_vs_mock", adjust="fdr", sort.by="B", number=Inf)
+
 # Extract only the important columns from the main output (final result; tT)
-tT <- subset(tT, select = c("ID","adj.P.Val","P.Value","t","B","logFC","GenBank.Accession","Gene.symbol","Gene.title"))
+tT_H1N1 <- subset(tT_H1N1, select = c("ID","adj.P.Val","P.Value","t","B","logFC","GenBank.Accession","Gene.symbol","Gene.title"))
+tT_dORF6 <- subset(tT_dORF6, select = c("ID","adj.P.Val","P.Value","t","B","logFC","GenBank.Accession","Gene.symbol","Gene.title"))
+tT_BatSRBD <- subset(tT_BatSRBD, select = c("ID","adj.P.Val","P.Value","t","B","logFC","GenBank.Accession","Gene.symbol","Gene.title"))
+tT_icSARS <- subset(tT_icSARS, select = c("ID","adj.P.Val","P.Value","t","B","logFC","GenBank.Accession","Gene.symbol","Gene.title"))
 
 # Extract the DEGs (adjusted p-value <0.05 and absolute value of logFC > 1)
-degs <- subset(tT, adj.P.Val < 0.05 & abs(logFC) > 1)
+degs_H1N1 <- subset(tT_H1N1, adj.P.Val < 0.05 & abs(logFC) > 1)
+degs_dORF6 <- subset(tT_dORF6, adj.P.Val < 0.05 & abs(logFC) > 1)
+degs_BatSRBD <- subset(tT_BatSRBD, adj.P.Val < 0.05 & abs(logFC) > 1)
+degs_icSARS <- subset(tT_icSARS, adj.P.Val < 0.05 & abs(logFC) > 1)
 
 # Extract genes that are upregulated and downregulated
-upregulated_genes <- subset(degs, logFC > 1)
-downregulated_genes <- subset(degs, logFC < -1)
+upregulated_genes_H1N1 <- subset(degs_H1N1, logFC > 1)
+downregulated_genes_H1N1 <- subset(degs_H1N1, logFC < -1)
+
+upregulated_genes_dORF6 <- subset(degs_dORF6, logFC > 1)
+downregulated_genes_dORF6 <- subset(degs_dORF6, logFC < -1)
+
+upregulated_genes_BatSRBD <- subset(degs_BatSRBD, logFC > 1)
+downregulated_genes_BatSRBD <- subset(degs_BatSRBD, logFC < -1)
+
+upregulated_genes_icSARS <- subset(degs_icSARS, logFC > 1)
+downregulated_genes_icSARS <- subset(degs_icSARS, logFC < -1)
 
 # Another way of extracting upregulated and downregulated genes using limma
 # summarize test results as "up", "down" or "not expressed"
 # dT <- decideTests(fit2, adjust.method = "fdr", p.value = 0.01, lfc = 0)
 
-write.table(degs, file = "DEGs_H1N1.tsv", sep = "\t", quote = FALSE, row.names = FALSE)
+write.table(degs_H1N1, file = "DEGs_H1N1.tsv", sep = "\t", quote = FALSE, row.names = FALSE)
+write.table(degs_dORF6, file = "DEGs_dORF6.tsv", sep = "\t", quote = FALSE, row.names = FALSE)
+write.table(degs_BatSRBD, file = "DEGs_BatSRBD.tsv", sep = "\t", quote = FALSE, row.names = FALSE)
+write.table(degs_icSARS, file = "DEGs_icSARS.tsv", sep = "\t", quote = FALSE, row.names = FALSE)
 
-# Visualizations and Quality Control
+# Get common DEGs in paired conditions
+common_degs_H1N1_dORF6 <- intersect(degs_H1N1$ID, degs_dORF6$ID)
+common_degs_H1N1_BatSRBD <- intersect(degs_H1N1$ID, degs_BatSRBD$ID)
+common_degs_H1N1_icSARS <- intersect(degs_H1N1$ID, degs_icSARS$ID)
+common_degs_dORF6_BatSRBD <- intersect(degs_dORF6$ID, degs_BatSRBD$ID)
+common_degs_dORF6_icSARS <- intersect(degs_dORF6$ID, degs_icSARS$ID)
+common_degs_BatSRBD_icSARS <- intersect(degs_BatSRBD$ID, degs_icSARS$ID)
 
-# Plot a histogram to visualize the distribution of Adjusted p-values
-hist(tT$adj.P.Val, col = "grey", border = "white",
-      xlab = "P-adj value", ylab = "Number of genes",
-      main = "P-adj value distribution")
-
-# Filters out genes that failed model fitting (no F-statistic)
-t.good <- which(!is.na(fit2$F))
-
-# Create a quantile-quantile (Q-Q) plot of the moderated t-statistics calculated by limma
-# to assess the distribution and reliability of the test statistics
-# In other words, draw a Q-Q plot to assess if the t-statistics
-# behaved as expected under the null hypothesis
-qqt(fit2$t[t.good], fit2$df.total[t.good], main = "Moderated t statistic")
-
-# Create a volcano plot
-# Ensure required columns exist for the plot
-# by taking the -log10 of the adjusted pvalues
-tT$logP <- -log10(tT$adj.P.Val)
-
-# Plot
-plot(
-     tT$logFC, tT$logP,
-     col="grey", pch=20,
-     xlab="log fold change",
-     ylab="-log10(Adj-pvalue)",
-     main="Volcano Plot of DEGs",
-     )
-
-# Add threshold lines
-abline(h = -log10(0.05), col = "blue", lty = 2)  # p-value threshold
-abline(v = c(-1, 1), col = "red", lty = 2)       # fold change thresholds
-
-# Subset upregulated and downregulated genes
-up <- degs[degs$logFC > 1, ]
-down <- degs[ degs$logFC < -1, ]
-
-# Highlight DEGs
-points(up$logFC, -log10(up$adj.P.Val), col="green", pch=20)
-points(down$logFC, -log10(down$adj.P.Val), col="red", pch=20)
-
-# UMAP plot (dimensionality reduction)
-# Clean the expression data
-ex <- na.omit(ex)                   # Remove missing values
-ex <- ex[!duplicated(ex), ]         # Remove duplicate genes
-
-# Run UMAP (transpose so samples are rows)
-ump <- umap(t(ex), n_neighbors = 15, random_state = 123)
-
-df <- data.frame(UMAP1 = ump$layout[,1],
-                 UMAP2 = ump$layout[,2],
-                 Sample = rownames(ump$layout),
-                 Group = gs)
-
-# Customize UMAP with ggplot2
-ggplot(df, aes(x = UMAP1, y = UMAP2, color = Group)) +
-  geom_point(size = 3, alpha = 0.8) +
-  geom_text_repel(aes(label = Sample), size = 3, max.overlaps = 100) +
-  labs(title = "UMAP Plot (n_neighbors = 15)",
-       x = "UMAP 1", y = "UMAP 2") +
-  theme_minimal()
-
-# mean-variance trend, helps to see if precision weights are needed
-plotSA(fit2, main="Mean variance trend, GSE47960")
-
-# expression value distribution
-par(mar=c(4,4,2,1))
-title <- paste ("GSE47960", "/", annotation(gset), " value distribution", sep ="")
-plotDensities(ex, group=gs, main=title, legend ="topright")
+# Get DEGs that are common in all conditions
+common_degs <- Reduce(intersect, list(degs_H1N1$ID, degs_dORF6$ID, degs_BatSRBD$ID, degs_icSARS$ID))
