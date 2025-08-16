@@ -8,6 +8,11 @@ install.packages("ggplot2")
 install.packages("ggrepel")
 install.packages("VennDiagram")
 install.packages("patchwork")
+install.packages("cowplot")
+install.packages("dplyr")
+install.packages("tidyr")
+install.packages("grid")
+install.packages("gridExtra")
 
 # Load required packages for Differential Gene Expression Analysis
 library(GEOquery)
@@ -17,6 +22,11 @@ library(ggplot2)
 library(ggrepel)
 library(VennDiagram)
 library(patchwork)
+library(cowplot)
+library(dplyr)
+library(tidyr)
+library(grid)
+library(gridExtra)
 
 # Download expression dataset (in matrix format), metadata and the annotation if available
 gset <- getGEO("GSE47960", GSEMatrix =TRUE, AnnotGPL=TRUE)
@@ -149,19 +159,6 @@ degs_H1N1 <- subset(tT_H1N1, adj.P.Val < 0.05 & abs(logFC) > 1)
 degs_dORF6 <- subset(tT_dORF6, adj.P.Val < 0.05 & abs(logFC) > 1)
 degs_BatSRBD <- subset(tT_BatSRBD, adj.P.Val < 0.05 & abs(logFC) > 1)
 degs_icSARS <- subset(tT_icSARS, adj.P.Val < 0.05 & abs(logFC) > 1)
-
-# Extract genes that are upregulated and downregulated
-upregulated_genes_H1N1 <- subset(degs_H1N1, logFC > 1)
-downregulated_genes_H1N1 <- subset(degs_H1N1, logFC < -1)
-
-upregulated_genes_dORF6 <- subset(degs_dORF6, logFC > 1)
-downregulated_genes_dORF6 <- subset(degs_dORF6, logFC < -1)
-
-upregulated_genes_BatSRBD <- subset(degs_BatSRBD, logFC > 1)
-downregulated_genes_BatSRBD <- subset(degs_BatSRBD, logFC < -1)
-
-upregulated_genes_icSARS <- subset(degs_icSARS, logFC > 1)
-downregulated_genes_icSARS <- subset(degs_icSARS, logFC < -1)
 
 # Another way of extracting upregulated and downregulated genes using limma
 # summarize test results as "up", "down" or "not expressed"
