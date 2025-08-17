@@ -23,11 +23,11 @@ microarray-DEG-analysis/<br>
 ├── requirements.txt        # List of R packages used<br>
 ├── run_all.R               # Master script to run the whole pipeline<br>
 │<br>
-├── scripts/<br>
+├── Scripts/<br>
 │   ├── 01_DEG_analysis.R   # Preprocessing + DEG identification<br>
 │   └── 02_visualization.R  # Visualization of results<br>
 │<br>
-├── results/<br>
+├── Results/<br>
     ├── Tables/             # DEG tables in CSV/TSV format<br>
     └── Figures/            # All figures (PNG, PDF, TIFF)<br>
 
@@ -59,17 +59,17 @@ Rscript run_all.R<br>
 
 This will:
 
-Download/prepare the dataset<br>
-Identify DEGs in each condition<br>
-Generate plots and save them to results/figures/<br>
-Save DEG tables to results/tables/<br>
+- Download/prepare the dataset<br>
+- Identify DEGs in each condition<br>
+- Generate plots and save them to results/figures/<br>
+- Save DEG tables to results/tables/<br>
 
 ## 📊 Key Outputs
 
-QC Plots: Density plot, mean–variance trend<br>
-DEG Overlap: Venn diagram of shared DEGs<br>
-DEG Counts: Stacked bar plot of up/down DEGs per condition<br>
-Volcano Plots: For each condition<br>
+- QC Plots: Density plot, mean–variance trend<br>
+- DEG Overlap: Venn diagram of shared DEGs<br>
+- DEG Counts: Stacked bar plot of up/down DEGs per condition<br>
+- Volcano Plots: For each condition<br>
 
 ## 📑 Citation
 
