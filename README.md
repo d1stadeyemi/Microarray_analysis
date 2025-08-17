@@ -1,5 +1,5 @@
 # Differential Gene Expression Analysis from Microarray Data (GSE47960)<br>
-📌 Project Overview <br>
+## 📌 Project Overview <br>
 
 This repository contains a complete workflow for identifying differentially expressed genes (DEGs) from the GSE47960 microarray dataset and visualizing the results with standard bioinformatics plots.
 
@@ -87,4 +87,4 @@ Mitchell et al (2013), GEO accession: GSE47960.
 ## 👩‍💻 Author
 
 Muhammad Ajagbe – Bioinformatics Researcher / Data Scientist <br>
-[LinkedIn]()
+[LinkedIn](www.linkedin.com/in/muhammadajagbe)
