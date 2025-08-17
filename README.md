@@ -7,39 +7,38 @@ The data used for this study were extracted from the work of [Mitchell et al (20
 
 Data access on this [Link](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE47960)<br>
 
-The differential gene expression (DEG) analysis can be found...<br>
+The differential gene expression (DEG) analysis can be found...
 
 The pipeline is split into two main parts:
 
-DEG analysis – preprocessing, normalization, and statistical testing.
-
-Visualization – PCA, volcano plots, heatmaps, Venn diagrams, DEG counts, and QC plots.
+(1) DEG analysis – preprocessing, normalization, and statistical testing.<br>
+(2) Visualization – PCA, volcano plots, heatmaps, Venn diagrams, DEG counts, and QC plots.
 
 This repo is designed for reproducibility: anyone can clone it and reproduce the results with a single command.
 
-📂 Repository Structure
-microarray-DEG-analysis/
-│
-├── README.md               # This file (project documentation)
-├── LICENSE                 # License (MIT/GPL-3.0 recommended)
-├── requirements.txt        # List of R packages used
-├── run_all.R               # Master script to run the whole pipeline
-│
-├── data/
-│   ├── raw/                # Raw GEO data (not tracked in git)
-│   ├── processed/          # Processed expression matrices
-│   └── metadata/           # Sample annotation files
-│
-├── scripts/
-│   ├── 01_DEG_analysis.R   # Preprocessing + DEG identification
-│   └── 02_visualization.R  # Visualization of results
-│
-├── results/
-│   ├── tables/             # DEG tables in CSV/TSV format
-│   └── figures/            # All figures (PNG, PDF, TIFF)
-│
-└── docs/                   # Optional: RMarkdown reports or extra notes
-
+📂 Repository Structure<br>
+microarray-DEG-analysis/<br>
+│<br>
+├── README.md               # This file (project documentation)<br>
+├── LICENSE                 # License (MIT/GPL-3.0 recommended)<br>
+├── requirements.txt        # List of R packages used<br>
+├── run_all.R               # Master script to run the whole pipeline<br>
+│<br>
+├── data/<br>
+│   ├── raw/                # Raw GEO data (not tracked in git)<br>
+│   ├── processed/          # Processed expression matrices<br>
+│   └── metadata/           # Sample annotation files<br>
+│<br>
+├── scripts/<br>
+│   ├── 01_DEG_analysis.R   # Preprocessing + DEG identification<br>
+│   └── 02_visualization.R  # Visualization of results<br>
+│<br>
+├── results/<br>
+│   ├── tables/             # DEG tables in CSV/TSV format<br>
+│   └── figures/            # All figures (PNG, PDF, TIFF)<br>
+│<br>
+└── docs/                   # Optional: RMarkdown reports or extra notes<br>
+<br>
 ⚙️ Installation & Requirements
 
 You need R (≥ 4.0) and the following packages:
