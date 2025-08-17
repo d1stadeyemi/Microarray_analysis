@@ -12,7 +12,7 @@ Data access on this [Link](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GS
 The pipeline is split into two main parts:
 
 (1) DEG analysis – preprocessing, normalization, and statistical testing.<br>
-(2) Visualization – PCA, volcano plots, heatmaps, Venn diagrams, DEG counts, and QC plots.
+(2) Visualization – volcano plot, Venn diagram, bar plot and QC plots.
 
 This repo is designed for reproducibility: anyone can clone it and reproduce the results with a single command.
 
