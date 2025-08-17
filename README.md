@@ -27,9 +27,9 @@ microarray-DEG-analysis/<br>
 │   ├── 01_DEG_analysis.R   # Preprocessing + DEG identification<br>
 │   └── 02_visualization.R  # Visualization of results<br>
 │<br>
-├── Results/<br>
-|   ├── Tables/             # DEG tables in CSV/TSV format<br>
-|   └── Figures/            # All figures (PNG, PDF, TIFF)<br>
+└── Results/<br>
+    ├── Tables/             # DEG tables in CSV/TSV format<br>
+    └── Figures/            # All figures (PNG, PDF, TIFF)<br>
 
 ## ⚙️ Installation & Requirements
 
