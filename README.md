@@ -41,12 +41,6 @@ You need R (≥ 4.0) and the following packages:<br>
 - cowplot<br>
 - tidyverse<br>
 
-Install packages with:
-
-install.packages(c("ggplot2", "VennDiagram", "cowplot", "tidyverse"))<br>
-if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")<br>
-BiocManager::install(c("limma", "GEOquery", "umap"))<br>
-
 A full list is saved in [requirements.txt](https://github.com/d1stadeyemi/Microarray_analysis/blob/master/requirements.txt)
 
 ## 🚀 Quick Start
