@@ -1,26 +1,120 @@
 # DEG Analysis
-## Introduction
-In this analysis we identifed genes that are differentially expressed based on the microarray results of there expressions. These genes were expressed by cells infected with 
-1. a wild type sars-cov virus, icSARs, 
-2. dORF-6 mutant sars-cov, 
-3. BAT mutant virus and 
-4. H1N1, influenza virus.
+The🧬 Differential Gene Expression Analysis from Microarray Data (GSE47960)
+📌 Project Overview
+
+This repository contains a complete workflow for identifying differentially expressed genes (DEGs) from the GSE47960 microarray dataset and visualizing the results with standard bioinformatics plots.
 
 The data used for this study were extracted from the work of [Mitchell et al (2013)](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0069374)
 
 Data access on this [Link](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE47960)
 
-## Methods
-The differential gene expression (DEG) analysis can be found [here](https://github.com/d1stadeyemi/RNA_seq/blob/master/gene_exp.ipynb)
-![Methodology](https://github.com/d1stadeyemi/RNA_seq/blob/master/images/methodology.png)
+The differential gene expression (DEG) analysis can be found...
 
-## Results
-1. We identified 25 common DEGs across influenza and SARS-CoV infections, highlighting shared host responses.
-2. CXCL10, CXCL2, and CXCL3 are central to chemokine activity and CXCR receptor binding, driving immune cell recruitment.
-3. FOS, JUNB, ZFP36, DUSP1, and EGR1 regulate inflammatory responses, linking viral infection to immune modulation.
-4. HEXDC, XAF1, and MAP9 are involved in cellular stress and structural integrity, suggesting potential roles in viral pathogenesis.
-5. These findings reveal key immune regulators, providing insights into therapeutic targets for controlling viral-induced inflammation.
+The pipeline is split into two main parts:
 
-## Conclusion
-We uncovered shared immune responses across influenza and SARS-CoV infections highlights key targets for therapeutic intervention. This study showed that chemokine signaling drives immune recruitment, potentially influencing disease severity and inflammation. Also, regulators of inflammation and cellular stress may contribute to viral pathogenesis and host recovery.
-These insights provide a foundation for future studies on host-directed therapies and viral immune modulation.
+DEG analysis – preprocessing, normalization, and statistical testing.
+
+Visualization – PCA, volcano plots, heatmaps, Venn diagrams, DEG counts, and QC plots.
+
+This repo is designed for reproducibility: anyone can clone it and reproduce the results with a single command.
+
+📂 Repository Structure
+microarray-DEG-analysis/
+│
+├── README.md               # This file (project documentation)
+├── LICENSE                 # License (MIT/GPL-3.0 recommended)
+├── requirements.txt        # List of R packages used
+├── run_all.R               # Master script to run the whole pipeline
+│
+├── data/
+│   ├── raw/                # Raw GEO data (not tracked in git)
+│   ├── processed/          # Processed expression matrices
+│   └── metadata/           # Sample annotation files
+│
+├── scripts/
+│   ├── 01_DEG_analysis.R   # Preprocessing + DEG identification
+│   └── 02_visualization.R  # Visualization of results
+│
+├── results/
+│   ├── tables/             # DEG tables in CSV/TSV format
+│   └── figures/            # All figures (PNG, PDF, TIFF)
+│
+└── docs/                   # Optional: RMarkdown reports or extra notes
+
+⚙️ Installation & Requirements
+
+You need R (≥ 4.0) and the following packages:
+
+limma
+
+GEOquery
+
+edgeR
+
+ggplot2
+
+pheatmap
+
+VennDiagram
+
+cowplot
+
+tidyverse
+
+Install packages with:
+
+install.packages(c("ggplot2", "pheatmap", "cowplot", "tidyverse"))
+if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
+BiocManager::install(c("limma", "GEOquery", "edgeR"))
+
+
+A full list is saved in requirements.txt.
+
+🚀 Quick Start
+
+Clone this repo and run the entire pipeline:
+
+git clone https://github.com/YOURUSERNAME/microarray-DEG-analysis.git
+cd microarray-DEG-analysis
+Rscript run_all.R
+
+
+This will:
+
+Download/prepare the dataset
+
+Identify DEGs in each condition
+
+Generate plots and save them to results/figures/
+
+Save DEG tables to results/tables/
+
+📊 Key Outputs
+
+QC Plots: Density plot, mean–variance trend
+
+DEG Overlap: Venn diagram of shared DEGs
+
+DEG Counts: Stacked bar plot of up/down DEGs per condition
+
+Volcano Plots: For each condition
+
+PCA Plot: Clustering of samples
+
+Heatmap: Regulation patterns of common DEGs
+
+Example (preview):
+
+
+
+
+📑 Citation
+
+If you use this workflow, please cite the original dataset:
+Moldoveanu et al. (2013), GEO accession: GSE47960.
+
+👩‍💻 Author
+
+Your Name – Bioinformatics Researcher / Data Scientist
+
+LinkedIn 
