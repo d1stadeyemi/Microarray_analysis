@@ -1,4 +1,8 @@
+#!/usr/bin/env Rscript
 # run_all.R
+# ---------
+# Run DEG analysis & visualization in sequence
+
 cat("🔹 Running DEG analysis...\n")
 source("Scripts/script1_DEG_analysis.R")
 
