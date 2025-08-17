@@ -5,11 +5,11 @@ This repository contains a complete workflow for identifying differentially expr
 
 * The data used for this study were extracted from the work of [Mitchell et al (2013)](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0069374)<br>
 
-* Data access on this [Link](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE47960)<br>
+Data access on this [Link](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE47960)<br>
 
 * The differential gene expression (DEG) analysis can be found...
 
-* The pipeline is split into two main parts:
+The pipeline is split into two main parts:
 
 (1) DEG analysis – preprocessing, normalization, and statistical testing.<br>
 (2) Visualization – PCA, volcano plots, heatmaps, Venn diagrams, DEG counts, and QC plots.
