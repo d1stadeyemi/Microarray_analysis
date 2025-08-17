@@ -19,8 +19,8 @@ This repo is designed for reproducibility: anyone can clone it and reproduce the
 ## 📂 Repository Structure<br>
 microarray-DEG-analysis/<br>
 │<br>
-├── README.md               # This file (project documentation)<br>
-├── LICENSE                 # License (MIT/GPL-3.0 recommended)<br>
+├── README.md               &nbsp; # This file (project documentation)<br>
+├── LICENSE                 &nbsp; # License (MIT/GPL-3.0 recommended)<br>
 ├── requirements.txt        # List of R packages used<br>
 ├── run_all.R               # Master script to run the whole pipeline<br>
 │<br>
