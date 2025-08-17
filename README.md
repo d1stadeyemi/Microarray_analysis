@@ -20,24 +20,16 @@ This repo is designed for reproducibility: anyone can clone it and reproduce the
 microarray-DEG-analysis/<br>
 │<br>
 ├── README.md               # This file (project documentation)<br>
-├── LICENSE                 # License (MIT/GPL-3.0 recommended)<br>
 ├── requirements.txt        # List of R packages used<br>
 ├── run_all.R               # Master script to run the whole pipeline<br>
-│<br>
-├── data/<br>
-│   ├── raw/                # Raw GEO data (not tracked in git)<br>
-│   ├── processed/          # Processed expression matrices<br>
-│   └── metadata/           # Sample annotation files<br>
 │<br>
 ├── scripts/<br>
 │   ├── 01_DEG_analysis.R   # Preprocessing + DEG identification<br>
 │   └── 02_visualization.R  # Visualization of results<br>
 │<br>
 ├── results/<br>
-│   ├── tables/             # DEG tables in CSV/TSV format<br>
-│   └── figures/            # All figures (PNG, PDF, TIFF)<br>
-│<br>
-└── docs/                   # Optional: RMarkdown reports or extra notes<br>
+    ├── Tables/             # DEG tables in CSV/TSV format<br>
+    └── Figures/            # All figures (PNG, PDF, TIFF)<br>
 
 ## ⚙️ Installation & Requirements
 
