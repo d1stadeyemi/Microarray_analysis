@@ -3,13 +3,13 @@
 
 This repository contains a complete workflow for identifying differentially expressed genes (DEGs) from the GSE47960 microarray dataset and visualizing the results with standard bioinformatics plots.
 
-The data used for this study were extracted from the work of [Mitchell et al (2013)](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0069374)<br>
+* The data used for this study were extracted from the work of [Mitchell et al (2013)](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0069374)<br>
 
 * Data access on this [Link](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE47960)<br>
 
-** The differential gene expression (DEG) analysis can be found...
+* The differential gene expression (DEG) analysis can be found...
 
-The pipeline is split into two main parts:
+* The pipeline is split into two main parts:
 
 (1) DEG analysis – preprocessing, normalization, and statistical testing.<br>
 (2) Visualization – PCA, volcano plots, heatmaps, Venn diagrams, DEG counts, and QC plots.
@@ -19,8 +19,8 @@ This repo is designed for reproducibility: anyone can clone it and reproduce the
 ## 📂 Repository Structure<br>
 microarray-DEG-analysis/<br>
 │<br>
-├── README.md              &nbsp; &nbsp; &nbsp;# This file (project documentation)<br>
-├── LICENSE  &nbsp; &nbsp; &nbsp; &nbsp; # License (MIT/GPL-3.0 recommended)<br>
+├── README.md               # This file (project documentation)<br>
+├── LICENSE                 # License (MIT/GPL-3.0 recommended)<br>
 ├── requirements.txt        # List of R packages used<br>
 ├── run_all.R               # Master script to run the whole pipeline<br>
 │<br>
