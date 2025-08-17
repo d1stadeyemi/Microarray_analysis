@@ -1,32 +1,23 @@
+#!/usr/bin/env Rscript
+# script1_DEG_analysis.R
+# ---------
+
+# Install required packages
 if (!require("BiocManager", quietly = TRUE))
   install.packages("BiocManager")
 
 BiocManager::install("GEOquery")
 BiocManager::install("limma")
 BiocManager::install("umap")
-install.packages("ggplot2")
-install.packages("ggrepel")
-install.packages("VennDiagram")
-install.packages("patchwork")
-install.packages("cowplot")
 install.packages("dplyr")
 install.packages("tidyr")
-install.packages("grid")
-install.packages("gridExtra")
 
 # Load required packages for Differential Gene Expression Analysis
 library(GEOquery)
 library(limma)
 library(umap)
-library(ggplot2)
-library(ggrepel)
-library(VennDiagram)
-library(patchwork)
-library(cowplot)
 library(dplyr)
 library(tidyr)
-library(grid)
-library(gridExtra)
 
 # Download expression dataset (in matrix format), metadata and the annotation if available
 gset <- getGEO("GSE47960", GSEMatrix =TRUE, AnnotGPL=TRUE)
@@ -179,3 +170,17 @@ common_degs_BatSRBD_icSARS <- intersect(degs_BatSRBD$ID, degs_icSARS$ID)
 
 # Get DEGs that are common in all conditions
 common_degs <- Reduce(intersect, list(degs_H1N1$ID, degs_dORF6$ID, degs_BatSRBD$ID, degs_icSARS$ID))
+
+# Save key results
+results <- list(
+  degs_H1N1   = degs_H1N1,
+  degs_dORF6  = degs_dORF6,
+  degs_BatSRBD = degs_BatSRBD,
+  degs_icSARS = degs_icSARS,
+  fit2        = fit2,
+  ex          = ex,
+  gs          = gs,
+  gset        = gset
+)
+
+saveRDS(results, file = "results/deg_results.rds")
