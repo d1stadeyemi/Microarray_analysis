@@ -5,9 +5,9 @@ This repository contains a complete workflow for identifying differentially expr
 
 The data used for this study were extracted from the work of [Mitchell et al (2013)](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0069374)<br>
 
-Data access on this [Link](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE47960)<br>
+* Data access on this [Link](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE47960)<br>
 
-The differential gene expression (DEG) analysis can be found...
+** The differential gene expression (DEG) analysis can be found...
 
 The pipeline is split into two main parts:
 
@@ -16,7 +16,7 @@ The pipeline is split into two main parts:
 
 This repo is designed for reproducibility: anyone can clone it and reproduce the results with a single command.
 
-📂 Repository Structure<br>
+## 📂 Repository Structure<br>
 microarray-DEG-analysis/<br>
 │<br>
 ├── README.md               # This file (project documentation)<br>
@@ -38,81 +38,53 @@ microarray-DEG-analysis/<br>
 │   └── figures/            # All figures (PNG, PDF, TIFF)<br>
 │<br>
 └── docs/                   # Optional: RMarkdown reports or extra notes<br>
-<br>
-⚙️ Installation & Requirements
 
-You need R (≥ 4.0) and the following packages:
+## ⚙️ Installation & Requirements
 
-limma
-
-GEOquery
-
-edgeR
-
-ggplot2
-
-pheatmap
-
-VennDiagram
-
-cowplot
-
-tidyverse
+You need R (≥ 4.0) and the following packages:<br>
+- limma<br>
+- GEOquery<br>
+- ggplot2<br>
+- VennDiagram<br>
+- cowplot<br>
+- tidyverse<br>
 
 Install packages with:
 
-install.packages(c("ggplot2", "pheatmap", "cowplot", "tidyverse"))
-if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
-BiocManager::install(c("limma", "GEOquery", "edgeR"))
+install.packages(c("ggplot2", "VennDiagram", "cowplot", "tidyverse"))<br>
+if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")<br>
+BiocManager::install(c("limma", "GEOquery", "umap"))<br>
 
+A full list is saved in [requirements.txt](https://github.com/d1stadeyemi/Microarray_analysis/blob/master/requirements.txt)
 
-A full list is saved in requirements.txt.
-
-🚀 Quick Start
+## 🚀 Quick Start
 
 Clone this repo and run the entire pipeline:
 
-git clone https://github.com/YOURUSERNAME/microarray-DEG-analysis.git
-cd microarray-DEG-analysis
-Rscript run_all.R
-
+git clone https://github.com/d1stadeyemi/Microarray_analysis<br>
+cd microarray-DEG-analysis<br>
+Rscript run_all.R<br>
 
 This will:
 
-Download/prepare the dataset
+Download/prepare the dataset<br>
+Identify DEGs in each condition<br>
+Generate plots and save them to results/figures/<br>
+Save DEG tables to results/tables/<br>
 
-Identify DEGs in each condition
+## 📊 Key Outputs
 
-Generate plots and save them to results/figures/
+QC Plots: Density plot, mean–variance trend<br>
+DEG Overlap: Venn diagram of shared DEGs<br>
+DEG Counts: Stacked bar plot of up/down DEGs per condition<br>
+Volcano Plots: For each condition<br>
 
-Save DEG tables to results/tables/
-
-📊 Key Outputs
-
-QC Plots: Density plot, mean–variance trend
-
-DEG Overlap: Venn diagram of shared DEGs
-
-DEG Counts: Stacked bar plot of up/down DEGs per condition
-
-Volcano Plots: For each condition
-
-PCA Plot: Clustering of samples
-
-Heatmap: Regulation patterns of common DEGs
-
-Example (preview):
-
-
-
-
-📑 Citation
+## 📑 Citation
 
 If you use this workflow, please cite the original dataset:
-Moldoveanu et al. (2013), GEO accession: GSE47960.
+Mitchell et al (2013), GEO accession: GSE47960.
 
-👩‍💻 Author
+## 👩‍💻 Author
 
-Your Name – Bioinformatics Researcher / Data Scientist
-
-LinkedIn 
+Muhammad Ajagbe – Bioinformatics Researcher / Data Scientist <br>
+[LinkedIn]()
