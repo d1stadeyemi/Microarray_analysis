@@ -2,16 +2,6 @@
 # script1_DEG_analysis.R
 # ---------
 
-# Install required packages
-if (!require("BiocManager", quietly = TRUE))
-  install.packages("BiocManager")
-
-BiocManager::install("GEOquery")
-BiocManager::install("limma")
-BiocManager::install("umap")
-install.packages("dplyr")
-install.packages("tidyr")
-
 # Load required packages for Differential Gene Expression Analysis
 library(GEOquery)
 library(limma)
